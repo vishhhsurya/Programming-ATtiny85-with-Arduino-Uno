@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programming ATtiny85 with Arduino Uno | ECE Learning Lab</title>
+<style>
+:root{--navy:#10233f;--blue:#1769aa;--teal:#087f8c;--ink:#172437;--muted:#5c6b7d;--paper:#f4f7fb;--line:#d8e1ec;--white:#fff;--green:#16794b;--red:#b42318;--amber:#8a5700}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}header{background:linear-gradient(120deg,#10233f,#1769aa 65%,#087f8c);color:white;padding:42px max(22px,calc((100% - 1160px)/2)) 34px}header .eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.78rem;font-weight:700;opacity:.85}h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.12;margin:.5rem 0 1rem}header p{max-width:850px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.chip{border:1px solid #ffffff66;border-radius:99px;padding:5px 11px;font-size:.85rem}nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px #10233f0d;overflow-x:auto}nav .inner{max-width:1160px;margin:auto;display:flex;gap:4px;padding:8px 14px;white-space:nowrap}nav a{color:#25425f;text-decoration:none;padding:7px 10px;border-radius:8px;font-size:.88rem}nav a:hover{background:#eaf2fa;color:var(--blue)}main{max-width:1160px;margin:28px auto;padding:0 18px 50px}.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 4px 18px #10233f08;margin-bottom:18px}.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.mini{background:#f0f6fc;border:1px solid #d9e8f7;border-radius:12px;padding:14px}.mini strong{display:block;color:var(--blue);margin-bottom:4px}h2{font-size:1.55rem;line-height:1.25;color:var(--navy);margin:0 0 14px}h3{font-size:1.13rem;color:#194a75;margin:22px 0 8px}h4{margin:12px 0 5px}p{margin:.5rem 0 1rem}ul,ol{padding-left:1.35rem}li{margin:.25rem 0}.muted,figcaption,.small{color:var(--muted);font-size:.92rem}.callout{border-left:4px solid var(--teal);background:#eef9fa;padding:13px 16px;border-radius:0 10px 10px 0;margin:14px 0}.warning{border-left-color:#d97706;background:#fff8e8}.good{border-left-color:#16834b;background:#effaf3}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:.94rem}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#edf3f9;color:#173957}code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}code{background:#eef2f7;color:#172437;padding:2px 5px;border-radius:4px}pre code{background:transparent;color:inherit;padding:0;border-radius:0}pre{background:#10233f;color:#eaf4ff;border-radius:12px;padding:16px;overflow:auto;line-height:1.5;font-size:.88rem}figure{margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fbfdff}figure svg{width:100%;height:auto;display:block}figcaption{margin-top:8px}.btn{border:0;border-radius:9px;background:var(--blue);color:white;padding:10px 15px;font-weight:700;cursor:pointer;margin:6px 5px 6px 0}.btn.secondary{background:#e8eef5;color:#183650}.btn:hover{filter:brightness(.94)}.quiz-q{border:1px solid var(--line);border-radius:12px;padding:15px;margin:14px 0}.quiz-q legend{font-weight:700;padding:0 5px}.option{display:flex;gap:9px;align-items:flex-start;padding:7px 8px;border-radius:7px;cursor:pointer}.option:hover{background:#f0f6fc}.feedback{margin-top:9px;padding:10px;border-radius:8px;display:none}.feedback.show{display:block}.feedback.correct{background:#eaf8ef;color:#125b36}.feedback.incorrect{background:#fff0ef;color:#8f1b14}.feedback.unanswered{background:#fff7e6;color:#744a00}.score{font-size:1.15rem;font-weight:800;margin:12px 0}.pill{display:inline-block;border-radius:6px;padding:2px 8px;font-size:.78rem;font-weight:700;background:#e7f0fb;color:#1a5489}.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.formula{font-size:1.05rem;background:#f1f6fb;border-radius:8px;padding:10px 12px;overflow-wrap:anywhere}.question{border-bottom:1px solid var(--line);padding:10px 0}details{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;background:#fcfdff}summary{cursor:pointer;font-weight:700;color:#194a75}footer{text-align:center;padding:28px 18px;color:var(--muted);border-top:1px solid var(--line)}.print-only{display:none}
+@media(min-width:850px){.layout{grid-template-columns:1fr}.hero-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){header{padding:30px 18px}main{padding:0 12px 35px}.card{padding:17px}nav .inner{padding:7px 8px}nav a{font-size:.82rem;padding:6px 8px}th,td{padding:8px;font-size:.88rem}}
+@media print{body{background:white;font-size:11pt;color:#111}header{background:white!important;color:#111;padding:12px 0;border-bottom:2px solid #222}nav,.btn,.no-print{display:none!important}main{max-width:none;padding:0;margin:0}.card{box-shadow:none;border:1px solid #aaa;break-inside:avoid;margin:10px 0;padding:14px}details{break-inside:avoid}details>*{display:block}a{color:#111;text-decoration:none}pre{white-space:pre-wrap;background:#f1f1f1;color:#111;border:1px solid #aaa}figure{break-inside:avoid}.print-only{display:block}}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">ECE Learning Lab · Embedded Systems & IoT</div>
+<h1>Programming ATtiny85 with Arduino Uno</h1>
+<p>A practical, exam-ready guide to using an Arduino Uno as an ISP programmer, wiring an ATtiny85, uploading a small embedded sketch, and checking the result safely.</p>
+<div class="chips"><span class="chip">Unit: Product Building and Miniaturization</span><span class="chip">B.E./B.Tech ECE</span><span class="chip">Offline interactive notes</span><span class="chip">GATE + interviews</span></div>
+</header>
+<nav aria-label="Main navigation"><div class="inner">
+<a href="#intro">Introduction</a><a href="#architecture">Wiring</a><a href="#workflow">Procedure</a><a href="#code">Code</a><a href="#debug">Debugging</a><a href="#gate">GATE practice</a><a href="#interview">Interviews</a><a href="#quiz">10-question quiz</a><a href="#revision">Revision</a>
+</div></nav>
+<main>
+<section class="card" id="intro">
+<h2>1. Introduction and learning objectives</h2>
+<p><strong>ATtiny85</strong> is a small 8-bit AVR microcontroller from the ATtiny family. It can run a program stored in its flash memory and control digital inputs/outputs, timers, and other on-chip peripherals. An <strong>Arduino Uno</strong> can be used as an in-system programmer (ISP) to transfer a compiled program to the ATtiny85 through its SPI programming interface.</p>
+<div class="hero-grid">
+<div class="mini"><strong>By the end, you can…</strong>Identify the programmer, target MCU, power, ground, reset, and SPI signal connections.</div>
+<div class="mini"><strong>Build & upload</strong>Prepare the Uno as ISP, select the correct ATtiny target/clock, burn bootloader settings if required, and upload using programmer.</div>
+<div class="mini"><strong>Test & debug</strong>Use a simple LED test and diagnose wiring, board-package, clock, and programmer errors.</div>
+</div>
+<h3>Why it matters</h3>
+<p>Programming a small MCU is useful for compact sensor nodes, simple controllers, wearables, battery-powered prototypes, and low-cost embedded products. The ATtiny85 is valuable when a full-size development board is unnecessary, although its limited memory, I/O, and peripherals must be considered.</p>
+<h3>Prerequisites</h3>
+<ul><li>Digital logic basics: HIGH/LOW and digital pins.</li><li>Basic C/C++ syntax and Arduino functions such as <code>pinMode()</code>, <code>digitalWrite()</code>, and <code>delay()</code>.</li><li>Power-supply polarity, common ground, and reading pinout diagrams.</li><li>Basic idea of a compiler, firmware, flash memory, SPI, and ISP.</li></ul>
+<h3>Important terminology</h3>
+<div class="table-wrap"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>MCU</td><td>Microcontroller unit: CPU, memory, and peripherals integrated on one chip.</td></tr>
+<tr><td>ISP</td><td>In-system programming; programming the chip while it is installed in the circuit.</td></tr>
+<tr><td>SPI</td><td>Serial Peripheral Interface. ISP uses clock, data-in, data-out, and reset-related control.</td></tr>
+<tr><td>Flash</td><td>Non-volatile memory that stores program code.</td></tr>
+<tr><td>Clock source</td><td>Internal or external timing source that sets the MCU's operating timing.</td></tr>
+<tr><td>Fuse bits</td><td>Configuration bits controlling options such as clock source and startup settings; not ordinary application variables.</td></tr>
+<tr><td>Target</td><td>The ATtiny85 chip being programmed; the Uno is the programmer.</td></tr>
+</tbody></table></div>
+<div class="callout warning"><strong>Important compatibility note:</strong> Arduino IDE does not necessarily include ATtiny85 board definitions by default. Install a trusted ATtiny board package compatible with your IDE, and follow that package's instructions. Menu labels and available clock options vary by package and version.</div>
+</section>
+
+<section class="card" id="architecture">
+<h2>2. System architecture and wiring diagram</h2>
+<p>The Uno runs the <em>ArduinoISP</em> sketch and acts as the programmer. The ATtiny85 is the target. The following is the common DIP-8 wiring for an ATtiny85 using the Uno's hardware SPI pins. Confirm the pinout and board-package instructions before powering the circuit.</p>
+<figure>
+<svg viewBox="0 0 900 470" role="img" aria-label="Arduino Uno connected to ATtiny85 DIP-8 using ISP signals">
+<rect x="25" y="70" width="245" height="310" rx="18" fill="#e8f2fb" stroke="#1769aa" stroke-width="2"/>
+<text x="147" y="105" text-anchor="middle" font-size="22" font-weight="700" fill="#123b60">Arduino Uno</text>
+<rect x="55" y="132" width="185" height="205" rx="8" fill="#fff" stroke="#9db8d0"/>
+<text x="75" y="162" font-size="16" fill="#173957">D10 / SS</text><text x="75" y="205" font-size="16" fill="#173957">D11 / MOSI</text><text x="75" y="248" font-size="16" fill="#173957">D12 / MISO</text><text x="75" y="291" font-size="16" fill="#173957">D13 / SCK</text><text x="75" y="323" font-size="16" fill="#173957">5V · GND</text>
+<rect x="575" y="90" width="275" height="280" rx="16" fill="#e9f8f2" stroke="#16805d" stroke-width="2"/>
+<text x="712" y="124" text-anchor="middle" font-size="22" font-weight="700" fill="#145a42">ATtiny85 (DIP-8)</text>
+<rect x="642" y="145" width="140" height="190" rx="12" fill="#263744" stroke="#101c25" stroke-width="2"/>
+<path d="M690 145 Q712 170 734 145" fill="#e9f8f2" stroke="#101c25" stroke-width="2"/>
+<g fill="#f4f7fb" font-size="14"><text x="650" y="174">1 · PB5/RESET</text><text x="650" y="198">2 · PB3</text><text x="650" y="222">3 · PB4</text><text x="650" y="246">4 · GND</text><text x="650" y="275">5 · PB0/MOSI</text><text x="650" y="299">6 · PB1/MISO</text><text x="650" y="323">7 · PB2/SCK</text></g>
+<g fill="none" stroke-width="3"><path d="M240 154 H400 V160 H642" stroke="#b42318"/><path d="M240 197 H430 V275 H642" stroke="#1769aa"/><path d="M240 240 H455 V299 H642" stroke="#087f8c"/><path d="M240 283 H480 V323 H642" stroke="#8a5700"/><path d="M240 323 H520 V350 H610" stroke="#16805d"/><path d="M610 350 H642 V246" stroke="#16805d"/></g>
+<g font-size="14" font-weight="700"><text x="350" y="145" fill="#b42318">RESET</text><text x="350" y="188" fill="#1769aa">MOSI</text><text x="365" y="263" fill="#087f8c">MISO</text><text x="380" y="310" fill="#8a5700">SCK</text><text x="500" y="342" fill="#16805d">5V</text></g>
+<text x="450" y="410" text-anchor="middle" font-size="16" fill="#172437">Connect Uno GND to ATtiny85 pin 4 (common ground)</text>
+<text x="450" y="438" text-anchor="middle" font-size="14" fill="#5c6b7d">Illustrative signal map — follow the actual chip notch/pin-1 orientation.</text>
+</svg>
+<figcaption>Figure 1. Conceptual ISP wiring for a DIP-8 ATtiny85. The diagram shows the signal mapping, not physical breadboard placement. Pin 8 (VCC) must connect to the appropriate supply (commonly Uno 5 V for a 5 V setup); pin 4 is GND. Do not power the target from two supplies at once.</figcaption>
+</figure>
+<div class="table-wrap"><table><thead><tr><th>Uno pin</th><th>ATtiny85 DIP-8 pin</th><th>Signal / purpose</th></tr></thead><tbody>
+<tr><td>D10</td><td>1 (PB5 / RESET)</td><td>Holds target in programming mode</td></tr>
+<tr><td>D11 (MOSI)</td><td>5 (PB0 / MOSI)</td><td>Programmer-to-target data</td></tr>
+<tr><td>D12 (MISO)</td><td>6 (PB1 / MISO)</td><td>Target-to-programmer data</td></tr>
+<tr><td>D13 (SCK)</td><td>7 (PB2 / SCK)</td><td>Serial programming clock</td></tr>
+<tr><td>5V</td><td>8 (VCC)</td><td>Supply for a compatible 5 V setup</td></tr>
+<tr><td>GND</td><td>4 (GND)</td><td>Shared reference and return path</td></tr>
+</tbody></table></div>
+<div class="callout"><strong>Pin numbering:</strong> On a DIP package, locate the notch or pin-1 dot. Number pins counter-clockwise when viewed from the top. PB0/PB1/PB2 names also have alternate functions; their function depends on the selected configuration and current program.</div>
+<h3>Functional block flow</h3>
+<figure><svg viewBox="0 0 850 160" role="img" aria-label="Programming workflow block diagram">
+<defs><marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#1769aa"/></marker></defs>
+<rect x="10" y="35" width="170" height="76" rx="12" fill="#e8f2fb" stroke="#1769aa"/><rect x="230" y="35" width="170" height="76" rx="12" fill="#eef9fa" stroke="#087f8c"/><rect x="450" y="35" width="170" height="76" rx="12" fill="#e9f8f2" stroke="#16805d"/><rect x="670" y="35" width="170" height="76" rx="12" fill="#fff4e5" stroke="#c47b11"/>
+<g text-anchor="middle" font-size="15" font-weight="700" fill="#172437"><text x="95" y="66">Arduino IDE</text><text x="95" y="88" font-weight="400">Compile sketch</text><text x="315" y="66">Arduino Uno</text><text x="315" y="88" font-weight="400">ArduinoISP</text><text x="535" y="66">SPI / ISP</text><text x="535" y="88" font-weight="400">Transfer firmware</text><text x="755" y="66">ATtiny85</text><text x="755" y="88" font-weight="400">Run program</text></g>
+<g stroke="#1769aa" stroke-width="2.5" marker-end="url(#arr)"><path d="M180 73 H224"/><path d="M400 73 H444"/><path d="M620 73 H664"/></g></svg><figcaption>Figure 2. Programming path from source code to target firmware.</figcaption></figure>
+</section>
+
+<section class="card" id="workflow">
+<h2>3. Step-by-step programming procedure</h2>
+<ol>
+<li><strong>Prepare the Uno.</strong> Connect the Uno to the computer and open the Arduino IDE.</li>
+<li><strong>Load ArduinoISP.</strong> In the IDE, open <em>File → Examples → 11.ArduinoISP → ArduinoISP</em> (menu grouping may vary), choose the correct Uno board and COM port, then upload the sketch to the Uno.</li>
+<li><strong>Wire the target.</strong> With power disconnected, connect the six ISP signals and supply as in Figure 1. Check pin-1 orientation and common ground.</li>
+<li><strong>Install/select the ATtiny board package.</strong> Use a reputable package compatible with your IDE. Select ATtiny85, the desired clock option, and the correct programmer option. Exact menus depend on the package.</li>
+<li><strong>Set the clock configuration.</strong> Select a clock setting supported by your chip and intended circuit. If the package requires it, use <em>Burn Bootloader</em> to configure fuse bits/clock settings; for classic ATtiny85 ISP workflows this generally does not install a serial bootloader.</li>
+<li><strong>Upload with programmer.</strong> Choose <em>Sketch → Upload Using Programmer</em>. Do not use the ordinary Upload button unless the selected workflow explicitly requires it.</li>
+<li><strong>Verify the result.</strong> Disconnect programming wires if needed, then test the target with a known sketch and a suitable LED resistor or a multimeter/logic probe.</li>
+</ol>
+<div class="callout warning"><strong>Uno reset note:</strong> Some Uno-based ArduinoISP setups need a capacitor (often around 10 µF electrolytic) between RESET and GND on the Uno after uploading ArduinoISP to prevent auto-reset during programming. Follow the ArduinoISP instructions for your Uno/IDE; observe electrolytic polarity and do not add it blindly to the target reset line.</div>
+<h3>Operating conditions and assumptions</h3>
+<ul><li>Use a voltage compatible with the target's datasheet and selected clock. A 5 V Uno supply is common in a 5 V lab setup, but verify the exact ATtiny85 variant and operating frequency.</li><li>Keep wires short and connections secure; a breadboard is fine for low-speed ISP programming when wired correctly.</li><li>Do not short VCC to GND. Disconnect power before rewiring.</li><li>If the clock fuse was set to an external clock source and no clock is present, ISP communication may fail until a suitable clock is supplied and the configuration is recovered.</li></ul>
+</section>
+
+<section class="card" id="code">
+<h2>4. Example firmware: blink an LED</h2>
+<p>This is a minimal test sketch for the ATtiny85. It assumes the chosen board package maps Arduino pin number <code>0</code> to PB0 (DIP pin 5). Use an external LED with a current-limiting resistor, for example 330 Ω to 1 kΩ, and verify polarity. The delay is in milliseconds.</p>
+<pre><code>// ATtiny85 LED blink test
+// Assumption: Arduino pin 0 maps to PB0 on the selected core.
+const int LED_PIN = 0;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_PIN, HIGH);
+  delay(500);
+  digitalWrite(LED_PIN, LOW);
+  delay(500);
+}</code></pre>
+<h3>Signal timing (illustrative)</h3>
+<figure><svg viewBox="0 0 800 240" role="img" aria-label="Illustrative square wave LED output with half-second high and low intervals">
+<g stroke="#d6e0ea" stroke-width="1"><path d="M80 30 V190 M180 30 V190 M280 30 V190 M380 30 V190 M480 30 V190 M580 30 V190 M680 30 V190"/><path d="M80 60 H730 M80 150 H730"/></g>
+<path d="M80 150 H180 V60 H280 V150 H380 V60 H480 V150 H580 V60 H680 V150 H730" fill="none" stroke="#087f8c" stroke-width="4" stroke-linejoin="round"/>
+<g fill="#172437" font-size="14"><text x="15" y="64">HIGH</text><text x="15" y="154">LOW</text><text x="180" y="213" text-anchor="middle">0.5 s</text><text x="280" y="213" text-anchor="middle">0.5 s</text><text x="430" y="236" text-anchor="middle">Illustrative time axis (not measured simulation data)</text><text x="80" y="25">Output</text></g></svg><figcaption>Figure 3. Expected digital output for 500 ms HIGH and 500 ms LOW. This is an illustrative timing diagram, not a Multisim simulation screenshot or measured result.</figcaption></figure>
+<h3>Timing calculation</h3>
+<div class="formula">Period: T = tHIGH + tLOW = 0.5 s + 0.5 s = 1.0 s</div>
+<div class="formula">Frequency: f = 1/T = 1/1.0 s = 1 Hz</div>
+<div class="formula">Duty cycle: D = (tHIGH/T) × 100% = (0.5/1.0) × 100% = 50%</div>
+<p>The output frequency is approximately 1 Hz when the delay timing is accurate. Actual timing can differ because of oscillator tolerance, core implementation, and delay calibration. <code>delay()</code> timing depends on the configured clock.</p>
+<h3>Component/function table</h3>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Function</th><th>Design note</th></tr></thead><tbody>
+<tr><td>ATtiny85</td><td>Executes the sketch</td><td>Limited flash, SRAM, pins, and peripherals compared with larger MCUs</td></tr>
+<tr><td>Uno</td><td>ISP programmer during upload</td><td>It is not normally the runtime controller in this example</td></tr>
+<tr><td>LED + series resistor</td><td>Visual output indicator</td><td>Resistor limits current; calculate using supply, LED forward voltage, and desired current</td></tr>
+<tr><td>Supply and common ground</td><td>Power and signal reference</td><td>Observe rated voltage and polarity</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="card" id="equations">
+<h2>5. Equations and solved numerical examples</h2>
+<p>This is a programming topic, so the most useful calculations are timing, duty cycle, and safe LED current limiting—not analog gain or frequency-response equations.</p>
+<h3>Equation sheet</h3>
+<div class="formula"><strong>Period:</strong> T = t<sub>HIGH</sub> + t<sub>LOW</sub> (seconds)</div>
+<div class="formula"><strong>Frequency:</strong> f = 1/T (hertz)</div>
+<div class="formula"><strong>Duty cycle:</strong> D = (t<sub>HIGH</sub>/T) × 100%</div>
+<div class="formula"><strong>LED series resistor:</strong> R = (V<sub>SUPPLY</sub> − V<sub>F</sub>)/I<sub>LED</sub> (ohms), for a simple DC series circuit</div>
+<p>In the resistor equation, <em>V<sub>SUPPLY</sub></em> is supply voltage in volts, <em>V<sub>F</sub></em> is LED forward voltage in volts, and <em>I<sub>LED</sub></em> is desired LED current in amperes. It assumes a simple series path and ignores small output-driver voltage drop; check MCU pin current limits and datasheet ratings.</p>
+<h3>Solved example 1 — blink frequency</h3>
+<p><strong>Given:</strong> LED stays HIGH for 250 ms and LOW for 250 ms. <strong>Find:</strong> period and frequency.</p>
+<ol><li>Convert: 250 ms = 0.25 s.</li><li>Period: T = 0.25 + 0.25 = 0.50 s.</li><li>Frequency: f = 1/0.50 = 2 Hz.</li></ol>
+<p><strong>Answer:</strong> T = 0.50 s, f = 2 Hz. The LED completes two full ON/OFF cycles each second.</p>
+<h3>Solved example 2 — LED resistor</h3>
+<p><strong>Given:</strong> 5 V supply, LED forward voltage 2.0 V, desired current 5 mA. <strong>Find:</strong> series resistor.</p>
+<ol><li>Convert current: 5 mA = 0.005 A.</li><li>Voltage across resistor: 5 − 2 = 3 V.</li><li>R = 3/0.005 = 600 Ω.</li><li>Choose a common value at or above this estimate, such as 680 Ω, after checking brightness and datasheet current limits.</li></ol>
+<p><strong>Answer:</strong> theoretical minimum estimate 600 Ω; a 680 Ω resistor gives about 4.4 mA under these ideal assumptions.</p>
+<h3>Solved example 3 — GATE-style duty cycle</h3>
+<p><strong>Given:</strong> an output has T = 4 ms and stays HIGH for 1 ms. <strong>Find:</strong> frequency and duty cycle.</p>
+<ol><li>Frequency: f = 1/(4 × 10<sup>−3</sup> s) = 250 Hz.</li><li>Duty cycle: D = (1/4) × 100% = 25%.</li></ol>
+<p><strong>Answer:</strong> 250 Hz and 25%. Remember to convert milliseconds to seconds when calculating frequency in hertz.</p>
+</section>
+
+<section class="card" id="debug">
+<h2>6. Practical troubleshooting and Multisim note</h2>
+<div class="table-wrap"><table><thead><tr><th>Symptom</th><th>Likely cause</th><th>Checks</th></tr></thead><tbody>
+<tr><td>“Device signature” or sync error</td><td>Incorrect wiring, no power, wrong target selection, reset not controlled, or programmer reset issue</td><td>Verify VCC/GND, D10→RESET, D11→MOSI, D12→MISO, D13→SCK, board/port, and ArduinoISP upload</td></tr>
+<tr><td>Upload succeeds but LED does not blink</td><td>Wrong pin mapping, LED polarity, missing ground, wrong clock setting, or bad connection</td><td>Check pin 0 mapping for selected core, LED orientation/resistor, supply, and clock option</td></tr>
+<tr><td>Timing is not as expected</td><td>Selected clock frequency differs from assumption, oscillator tolerance, or software timing overhead</td><td>Confirm board clock setting and measure with an oscilloscope/logic analyzer if available</td></tr>
+<tr><td>ISP stopped working after changing fuses</td><td>Target configured for an external clock or reset pin reconfigured</td><td>Review fuse settings; recovery may require an external clock or high-voltage programming hardware, depending on the change</td></tr>
+<tr><td>Intermittent programming</td><td>Long wires, poor breadboard contact, noisy supply, or unstable reset</td><td>Shorten wires, check contacts, add suitable supply decoupling near the MCU, and follow programmer-specific reset guidance</td></tr>
+</tbody></table></div>
+<h3>Can this be simulated in Multisim?</h3>
+<p>Multisim is primarily an electronic circuit simulation environment. Support for the ATtiny85, Arduino IDE compilation, and the ISP upload workflow depends on the installed Multisim edition and available models; a complete ArduinoISP-to-ATtiny85 firmware workflow should not be assumed to be supported. Use the actual Uno/ATtiny85 hardware for programming validation unless your installed version explicitly supports the required MCU model and firmware workflow.</p>
+<div class="callout warning"><strong>Simulation honesty:</strong> No Multisim screenshot was attached with this request. The figures on this page are original illustrative diagrams; they are not claimed to be Multisim outputs or measured results.</div>
+</section>
+
+<section class="card" id="gate">
+<h2>7. GATE-style practice — 10 original questions</h2>
+<p class="muted">These are original practice questions, not claimed to be actual previous-year GATE questions. Expand each item to view the answer and reasoning.</p>
+<details><summary><span class="pill">Easy</span> Q1. Which interface is commonly used by an Arduino Uno to ISP-program an ATtiny85?</summary><p><strong>Answer: SPI-based ISP.</strong> MOSI, MISO, and SCK carry serial programming data/clock, while RESET places the target in programming mode. UART serial bootloading is a different method.</p></details>
+<details><summary><span class="pill">Easy</span> Q2. In the common DIP-8 pinout, which ATtiny85 pin is GND?</summary><p><strong>Answer: Pin 4.</strong> Pin 8 is VCC. Always confirm the package orientation before wiring.</p></details>
+<details><summary><span class="pill">Moderate</span> Q3. A blink sketch uses 300 ms HIGH and 700 ms LOW. What are its period and frequency?</summary><p><strong>Answer: T = 1 s; f = 1 Hz.</strong> T = 0.3 + 0.7 = 1 s, so f = 1/T = 1 Hz.</p></details>
+<details><summary><span class="pill">Moderate</span> Q4. For Q3, what is the duty cycle?</summary><p><strong>Answer: 30%.</strong> D = (0.3/1.0) × 100% = 30%.</p></details>
+<details><summary><span class="pill">Easy</span> Q5. What is the main purpose of the ArduinoISP example?</summary><p><strong>Answer:</strong> It makes the Uno act as an in-system programmer for a supported target MCU. The sketch must first be uploaded to the Uno.</p></details>
+<details><summary><span class="pill">Moderate</span> Q6. Why is a common ground needed between programmer and target?</summary><p><strong>Answer:</strong> It establishes a shared voltage reference and return path so logic levels can be interpreted reliably.</p></details>
+<details><summary><span class="pill">Moderate</span> Q7. A 5 V source drives an LED with V<sub>F</sub> = 2 V at 6 mA. Estimate R.</summary><p><strong>Answer: 500 Ω.</strong> R = (5 − 2)/0.006 = 500 Ω. Choose a suitable standard value and check pin-current limits; 560 Ω is a conservative nearby choice.</p></details>
+<details><summary><span class="pill">Difficult</span> Q8. After selecting an external-clock fuse setting, ISP communication fails. What is a plausible explanation?</summary><p><strong>Answer:</strong> The MCU may need an external clock to run its programming interface as configured. Supply a suitable clock to recover if appropriate, then restore a valid clock configuration. Exact recovery depends on fuse changes and hardware.</p></details>
+<details><summary><span class="pill">Moderate</span> Q9. What is the difference between uploading ArduinoISP to the Uno and uploading a sketch to the ATtiny85?</summary><p><strong>Answer:</strong> The first programs the Uno with programmer firmware; the second uses that firmware to transfer the compiled target program through ISP.</p></details>
+<details><summary><span class="pill">Difficult</span> Q10. A 1 kHz square wave has a 20% duty cycle. How long is the HIGH interval?</summary><p><strong>Answer: 0.2 ms (200 µs).</strong> T = 1/1000 = 1 ms; tHIGH = 0.20 × 1 ms = 0.2 ms.</p></details>
+<h3>Interactive GATE quiz</h3>
+<p>Choose one answer for each question, then check your score. Explanations appear after submission.</p>
+<div id="gateQuiz"></div><button class="btn" id="gateCheck">Check GATE quiz</button><button class="btn secondary" id="gateReset">Reset quiz</button><div id="gateScore" class="score" aria-live="polite"></div>
+</section>
+
+<section class="card" id="interview">
+<h2>8. Core electronics company interview preparation</h2>
+<p>Use these answers as a starting point; a strong candidate also explains the signal path and describes how they would verify it on hardware.</p>
+<details><summary>1. What is the ATtiny85?</summary><p>An 8-bit AVR microcontroller with on-chip flash, SRAM, EEPROM, GPIO, timers, and other peripherals. Its small footprint suits compact control tasks, but memory and I/O resources are limited.</p></details>
+<details><summary>2. What does ISP mean, and why use it?</summary><p>In-system programming lets firmware be written to a chip without removing it from the target circuit. It is useful during prototyping, production programming, and field/service workflows when the board exposes the required programming connections.</p></details>
+<details><summary>3. Explain MOSI, MISO, and SCK.</summary><p>MOSI is data from programmer to target, MISO is data from target to programmer, and SCK is the serial clock. The target reset/programming control is also required for classic AVR ISP.</p></details>
+<details><summary>4. Why upload ArduinoISP before programming the ATtiny85?</summary><p>The Uno needs firmware that implements the programmer protocol. Uploading ArduinoISP turns the Uno into the bridge between the IDE/programming tool and the target MCU.</p></details>
+<details><summary>5. Why might a device-signature error occur?</summary><p>Possible causes include swapped SPI lines, missing common ground or power, wrong target selection, incorrect reset wiring, wrong port, or an Uno auto-reset issue. Verify the simplest electrical causes first.</p></details>
+<details><summary>6. What are fuse bits?</summary><p>Non-volatile configuration bits that select MCU options such as clock source and startup behavior. Incorrect settings can prevent expected timing or make ordinary ISP recovery difficult.</p></details>
+<details><summary>7. Does “Burn Bootloader” necessarily install a serial bootloader?</summary><p>No. In many ATtiny85 board-package workflows, the action primarily sets fuse/configuration values such as the clock. Confirm the behavior of the selected core and programmer.</p></details>
+<details><summary>8. How would you validate a blinking output?</summary><p>Check supply and ground, confirm pin mapping, inspect LED polarity and series resistor, then measure the output with a multimeter, oscilloscope, or logic analyzer. Compare measured period/duty cycle with the configured delay and clock.</p></details>
+<details><summary>9. What changes when the clock setting changes?</summary><p>CPU instruction timing and timer/peripheral timing change. Software delays and serial/peripheral baud rates may change unless their configuration accounts for the new clock. A mismatch can make observed timing inaccurate.</p></details>
+<details><summary>10. How would you make a small sensor node production-ready?</summary><p>Verify voltage and current budgets, sleep/wake behavior, sensor interface timing, watchdog/fault recovery, EMC/noise, programming pads, test coverage, firmware versioning, and operation across temperature and supply ranges.</p></details>
+<details><summary>11. Can every Arduino library run on ATtiny85?</summary><p>No. Libraries may depend on unsupported peripherals, timers, memory, pin mappings, or a particular MCU architecture. Check core compatibility, flash/SRAM use, and required hardware resources.</p></details>
+<details><summary>12. What is a practical limitation of using an Uno as ISP?</summary><p>It is convenient for labs but adds wiring and setup steps, and it is not a substitute for a production programmer fixture when repeatability, throughput, traceability, or isolation are required.</p></details>
+<h3>Industry perspective</h3>
+<p>In an embedded hardware team, the same skills are used to bring up a new board, program firmware through test pads, verify GPIO and timing, and isolate hardware-versus-firmware faults. Production designs should document the connector/pad pinout, programmer settings, fuse configuration, firmware checksum/version, and pass/fail test procedure.</p>
+</section>
+
+<section class="card" id="quiz">
+<h2>9. Interactive topic quiz — exactly 10 questions</h2>
+<p>Each question has one correct answer. Submit to see your score out of 10, percentage, and an explanation for every question. Unanswered questions are counted separately.</p>
+<div id="topicQuiz"></div><button class="btn" id="topicCheck">Check answers</button><button class="btn secondary" id="topicReset">Reset quiz</button><div id="topicScore" class="score" aria-live="polite"></div>
+</section>
+
+<section class="card" id="applications">
+<h2>10. Applications, advantages, and limitations</h2>
+<div class="two-col"><div><h3>Applications</h3><ul><li>Simple sensor polling and threshold alarms.</li><li>LED indicators, small user interfaces, and timing controllers.</li><li>Compact low-cost prototypes and educational embedded projects.</li><li>Small battery-powered products when sleep modes and power budget are designed carefully.</li></ul></div><div><h3>Advantages</h3><ul><li>Small package and relatively simple hardware.</li><li>In-system programming using common lab hardware.</li><li>Good for learning GPIO, timers, firmware compilation, and board bring-up.</li></ul><h3>Limitations</h3><ul><li>Limited memory, pins, and peripheral set.</li><li>Board-core and library compatibility must be checked.</li><li>Clock/fuse mistakes can complicate recovery.</li><li>Not a Wi-Fi/Bluetooth radio by itself; IoT connectivity requires additional hardware or a different MCU.</li></ul></div></div>
+<h3>Related concepts comparison</h3>
+<div class="table-wrap"><table><thead><tr><th>Method</th><th>How it programs</th><th>Typical consideration</th></tr></thead><tbody>
+<tr><td>ISP</td><td>Programs MCU through dedicated low-level interface (SPI for classic ATtiny85 AVR ISP)</td><td>Needs programmer wiring and reset access</td></tr>
+<tr><td>Serial bootloader</td><td>Boot code receives firmware through a serial protocol</td><td>Needs a bootloader, suitable interface, and available memory</td></tr>
+<tr><td>Debug/program probe</td><td>Dedicated hardware can program and sometimes debug supported MCUs</td><td>Tool and device support vary</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="card" id="revision">
+<h2>11. Quick revision sheet</h2>
+<h3>High-priority facts</h3>
+<ul><li>Arduino Uno = programmer; ATtiny85 = target MCU.</li><li>Classic DIP-8 ATtiny85: pin 1 RESET, pin 4 GND, pin 5 PB0/MOSI, pin 6 PB1/MISO, pin 7 PB2/SCK, pin 8 VCC.</li><li>Uno hardware SPI pins: D10 used for target RESET in the common ArduinoISP wiring; D11 MOSI; D12 MISO; D13 SCK.</li><li>Upload ArduinoISP to the Uno first, then use the target board selection and “Upload Using Programmer”.</li><li>Check the board package's clock setting and fuse behavior; menu wording varies.</li><li>For a square wave: frequency is reciprocal of period; duty cycle is HIGH time divided by total period.</li><li>Use an LED series resistor and keep MCU pin current within datasheet limits.</li></ul>
+<h3>Common mistakes</h3>
+<ul><li>Confusing the Uno's pins with the ATtiny85's physical pin numbers.</li><li>Forgetting common ground or reversing the DIP chip.</li><li>Using normal Upload instead of Upload Using Programmer in an ISP workflow.</li><li>Assuming every Arduino library/core feature is available on ATtiny85.</li><li>Assuming illustrative waveforms are real simulation measurements.</li><li>Changing fuse settings without understanding clock-source recovery.</li></ul>
+<h3>Memory aid</h3><p><strong>“10 Reset, 11 MOSI, 12 MISO, 13 Clock”</strong> for the common Uno ISP wiring. On the target, remember the DIP-8 anchors: <strong>1 Reset, 4 Ground, 8 VCC</strong>. Always confirm the package pinout before applying power.</p>
+<h3>Print or save as PDF</h3><p>Use your browser's Print command (Ctrl+P on Windows), then choose a printer or “Save as PDF”. The navigation and interactive buttons are hidden in print layout; open any expandable answers you want included before printing.</p>
+</section>
+</main>
+<footer><p><strong>ECE Learning Lab</strong> · Standalone offline study resource</p><p class="small">Technical note: board-package menus and behavior can vary. Use the ATtiny85 datasheet and the selected core's documentation as the final authority for electrical limits and programming settings.</p></footer>
+<script>
+const gateQuestions = [
+{q:"Which interface is used in the common Uno-to-ATtiny85 ISP setup?",o:["I²C","SPI","USB directly to target","CAN"],a:1,e:"Classic AVR ISP uses SPI signals (MOSI, MISO, SCK) plus reset control."},
+{q:"What does the Uno do after ArduinoISP is uploaded?",o:["Acts as the programmer","Becomes the ATtiny85","Supplies an external clock in every case","Converts USB into analog voltage"],a:0,e:"ArduinoISP firmware lets the Uno communicate with the target for programming."},
+{q:"A sketch is HIGH for 0.2 s and LOW for 0.3 s. What is the frequency?",o:["2 Hz","5 Hz","0.5 Hz","10 Hz"],a:0,e:"T = 0.2 + 0.3 = 0.5 s; f = 1/T = 2 Hz."},
+{q:"For a 0.2 s HIGH interval in a 0.5 s period, duty cycle is:",o:["20%","40%","50%","60%"],a:1,e:"D = 0.2/0.5 × 100% = 40%."},
+{q:"Which ATtiny85 DIP-8 pin is VCC?",o:["Pin 1","Pin 4","Pin 7","Pin 8"],a:3,e:"For the common DIP-8 pinout, pin 8 is VCC and pin 4 is GND."},
+{q:"Why is a resistor placed in series with a test LED?",o:["To increase clock frequency","To limit current","To store firmware","To select the SPI mode"],a:1,e:"The resistor limits LED current and helps protect the LED and MCU output."},
+{q:"Which command is commonly used to transfer a sketch through ISP after setup?",o:["Upload Using Programmer","Format Target","Serial Monitor Upload","Burn EEPROM only"],a:0,e:"The ISP workflow uses Upload Using Programmer; exact menu text can vary."},
+{q:"If the target is configured for an external clock but none is present, what may happen?",o:["It always doubles the clock","ISP may fail to communicate","The LED resistor changes value","MOSI becomes ground permanently"],a:1,e:"A target that needs an external clock may not run its programming interface as expected without one."},
+{q:"What is the period of a 250 Hz square wave?",o:["4 ms","2.5 ms","250 ms","0.25 ms"],a:0,e:"T = 1/250 s = 0.004 s = 4 ms."},
+{q:"Which statement about Multisim is safest?",o:["Every edition fully emulates ArduinoISP and ATtiny85 programming","The illustrative waveform proves hardware operation","Support depends on edition/models; hardware validation may be needed","A simulator removes the need to check pinout"],a:2,e:"Do not assume the full firmware programming workflow is supported; check the installed version and validate on hardware."}
+];
+const topicQuestions = [
+{q:"What is the ATtiny85?",o:["An 8-bit AVR microcontroller","An analog op-amp","A wireless router","A power MOSFET"],a:0,e:"ATtiny85 is an 8-bit AVR MCU with memory, GPIO, and peripherals."},
+{q:"In common ISP wiring, Uno D11 connects to target:",o:["VCC","MOSI","MISO","GND"],a:1,e:"D11 is MOSI on the Uno's hardware SPI interface."},
+{q:"In common ISP wiring, Uno D12 connects to target:",o:["MISO","SCK","RESET","VCC"],a:0,e:"D12 is MISO, the data path from target back to programmer."},
+{q:"Which ATtiny85 DIP-8 pin is RESET/PB5?",o:["Pin 1","Pin 2","Pin 4","Pin 8"],a:0,e:"Pin 1 is RESET/PB5 on the common DIP-8 ATtiny85 pinout."},
+{q:"A blink cycle has 100 ms HIGH and 900 ms LOW. What is the period?",o:["100 ms","900 ms","1 s","10 s"],a:2,e:"T = 100 ms + 900 ms = 1000 ms = 1 s."},
+{q:"For that 1 s period, the duty cycle is:",o:["10%","25%","50%","90%"],a:0,e:"D = 100 ms / 1000 ms × 100% = 10%."},
+{q:"For 5 V supply, 2 V LED drop and 10 mA target current, ideal R is:",o:["30 Ω","100 Ω","300 Ω","700 Ω"],a:2,e:"R = (5 − 2)/0.010 = 300 Ω. Check MCU current ratings and select a suitable standard value."},
+{q:"What should be common between the Uno and target?",o:["Ground reference","Both reset pins tied high only","Two separate grounds with no connection","Their clock frequencies must always match"],a:0,e:"A shared ground provides a common reference for digital signals."},
+{q:"Why can changing clock settings alter delay timing?",o:["The CPU/peripheral time base changes","The chip loses its flash memory automatically","MISO becomes MOSI","Ground voltage becomes zero"],a:0,e:"Software delays and peripheral timing depend on the configured clock and core implementation."},
+{q:"Which is a sensible first debugging step for a signature error?",o:["Replace every component","Check power, ground, RESET, SPI wiring and target selection","Increase LED brightness","Delete the sketch"],a:1,e:"Verify the basic electrical connections and programming setup before making other changes."}
+];
+function renderQuiz(hostId, questions, prefix){
+ const host=document.getElementById(hostId);
+ host.innerHTML="";
+ questions.forEach((item,i)=>{
+  const field=document.createElement("fieldset"); field.className="quiz-q"; field.id=prefix+"q"+i;
+  const legend=document.createElement("legend"); legend.textContent=(i+1)+". "+item.q; field.appendChild(legend);
+  item.o.forEach((option,j)=>{
+   const label=document.createElement("label");label.className="option";
+   const radio=document.createElement("input");radio.type="radio";radio.name=prefix+"ans"+i;radio.value=j;
+   const span=document.createElement("span");span.textContent=String.fromCharCode(65+j)+". "+option;
+   label.appendChild(radio);label.appendChild(span);field.appendChild(label);
+  });
+  const fb=document.createElement("div");fb.className="feedback";fb.id=prefix+"fb"+i;field.appendChild(fb);host.appendChild(field);
+ });
+}
+function checkQuiz(questions,prefix,scoreId){
+ let score=0,unanswered=0;
+ questions.forEach((item,i)=>{
+  const selected=document.querySelector('input[name="'+prefix+'ans'+i+'"]:checked');
+  const fb=document.getElementById(prefix+"fb"+i);fb.className="feedback show";
+  if(!selected){unanswered++;fb.classList.add("unanswered");fb.textContent="Unanswered. Correct answer: "+String.fromCharCode(65+item.a)+". "+item.o[item.a]+". "+item.e;}
+  else if(Number(selected.value)===item.a){score++;fb.classList.add("correct");fb.textContent="Correct. "+item.e;}
+  else{fb.classList.add("incorrect");fb.textContent="Incorrect. Correct answer: "+String.fromCharCode(65+item.a)+". "+item.o[item.a]+". "+item.e;}
+ });
+ const percent=Math.round(score/questions.length*100);
+ document.getElementById(scoreId).textContent="Score: "+score+"/"+questions.length+" ("+percent+"%). Unanswered: "+unanswered+".";
+}
+function resetQuiz(questions,prefix,scoreId,hostId){
+ document.querySelectorAll('#'+hostId+' input[type="radio"]').forEach(r=>r.checked=false);
+ questions.forEach((_,i)=>{const fb=document.getElementById(prefix+"fb"+i);fb.className="feedback";fb.textContent="";});
+ document.getElementById(scoreId).textContent="";
+}
+renderQuiz("gateQuiz",gateQuestions,"g");
+renderQuiz("topicQuiz",topicQuestions,"t");
+document.getElementById("gateCheck").addEventListener("click",()=>checkQuiz(gateQuestions,"g","gateScore"));
+document.getElementById("gateReset").addEventListener("click",()=>resetQuiz(gateQuestions,"g","gateScore","gateQuiz"));
+document.getElementById("topicCheck").addEventListener("click",()=>checkQuiz(topicQuestions,"t","topicScore"));
+document.getElementById("topicReset").addEventListener("click",()=>resetQuiz(topicQuestions,"t","topicScore","topicQuiz"));
+</script>
+</body>
+</html>
